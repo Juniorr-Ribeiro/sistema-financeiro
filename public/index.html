@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0814" />
+  <title>Controle da Casa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== LOGIN ===== -->
+  <div id="login" class="login-screen" hidden>
+    <form class="login-card" id="loginForm">
+      <div class="login-mark">R$</div>
+      <h1>Controle da Casa</h1>
+      <p>Entre com a senha para abrir o controle.</p>
+      <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" />
+      <button type="submit">Entrar</button>
+      <span class="login-error" id="loginError"></span>
+    </form>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">R$</span>
+        <span class="brand-name">Controle da Casa</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-ghost btn-analise" id="analiseBtn">Análise</button>
+        <button class="btn-primary btn-fatura" id="faturaBtn">Resumo da fatura</button>
+        <div class="month-picker">
+          <label for="monthSelect">Mês</label>
+          <select id="monthSelect"></select>
+          <button class="btn-ghost" id="newMonthBtn" title="Novo mês">+ Mês</button>
+        </div>
+        <span class="save-state" id="saveState">Salvo</span>
+        <button class="btn-ghost" id="logoutBtn">Sair</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <!-- Resumo do mes -->
+      <section class="summary" id="summary"></section>
+
+      <!-- Dois lados -->
+      <section class="cycles">
+        <div class="cycle cycle--5" data-cycle="cycle5">
+          <div class="cycle-head">
+            <div class="cycle-title">
+              <span class="cycle-day">05</span>
+              <div>
+                <h2>Recebemos dia 5</h2>
+                <p class="cycle-sub">Primeira quinzena</p>
+              </div>
+            </div>
+            <label class="renda">
+              <span>Total a receber</span>
+              <input type="text" inputmode="decimal" class="renda-input" data-cycle="cycle5" />
+            </label>
+          </div>
+          <div class="table" data-cycle="cycle5"></div>
+          <button class="add-row" data-cycle="cycle5">+ Adicionar gasto</button>
+          <div class="cycle-foot" data-cycle="cycle5"></div>
+        </div>
+
+        <div class="cycle cycle--20" data-cycle="cycle20">
+          <div class="cycle-head">
+            <div class="cycle-title">
+              <span class="cycle-day">20</span>
+              <div>
+                <h2>Recebemos dia 20</h2>
+                <p class="cycle-sub">Segunda quinzena</p>
+              </div>
+            </div>
+            <label class="renda">
+              <span>Total a receber</span>
+              <input type="text" inputmode="decimal" class="renda-input" data-cycle="cycle20" />
+            </label>
+          </div>
+          <div class="table" data-cycle="cycle20"></div>
+          <button class="add-row" data-cycle="cycle20">+ Adicionar gasto</button>
+          <div class="cycle-foot" data-cycle="cycle20"></div>
+        </div>
+      </section>
+
+      <!-- Orcamento planejado -->
+      <section class="budget">
+        <button class="budget-toggle" id="budgetToggle">
+          <span>Orçamento planejado</span>
+          <span class="budget-total" id="budgetTotalTop"></span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="budget-body" id="budgetBody" hidden>
+          <p class="budget-hint">Referência de quanto vocês planejam gastar por categoria no mês.</p>
+          <div class="budget-list" id="budgetList"></div>
+          <button class="add-row" id="addBudget">+ Adicionar categoria</button>
+          <div class="budget-foot">
+            <span>Total planejado</span>
+            <strong id="budgetTotal"></strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="appfoot">
+      Controle da Casa · os dados ficam salvos no servidor
+    </footer>
+  </div>
+
+  <!-- datalist de contas/cartoes -->
+  <datalist id="contasList"></datalist>
+
+  <!-- Modal ANÁLISE DO MÊS -->
+  <div class="modal" id="analiseModal" hidden>
+    <div class="modal-card modal-card--wide">
+      <div class="fatura-head">
+        <div>
+          <h3>Análise do mês</h3>
+          <span class="fatura-month" id="analiseMonth"></span>
+        </div>
+        <button class="modal-x" id="analiseClose" title="Fechar">×</button>
+      </div>
+      <div class="fatura-body" id="analiseBody"></div>
+    </div>
+  </div>
+
+  <!-- Modal RESUMO DA FATURA -->
+  <div class="modal" id="faturaModal" hidden>
+    <div class="modal-card modal-card--wide">
+      <div class="fatura-head">
+        <div>
+          <h3>Resumo da fatura</h3>
+          <span class="fatura-month" id="faturaMonth"></span>
+        </div>
+        <button class="modal-x" id="faturaClose" title="Fechar">×</button>
+      </div>
+      <div class="fatura-body" id="faturaBody"></div>
+      <div class="fatura-foot">
+        <div class="fatura-totais" id="faturaTotais"></div>
+        <div class="fatura-actions">
+          <button class="btn-ghost" id="faturaCopy">Copiar resumo</button>
+          <button class="btn-pay" id="faturaPayAll">Pagar fatura</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal novo mes -->
+  <div class="modal" id="monthModal" hidden>
+    <div class="modal-card">
+      <h3>Novo mês</h3>
+      <label class="modal-field">
+        Mês (ano-mês)
+        <input type="month" id="newMonthValue" />
+      </label>
+      <div class="modal-opts">
+        <label><input type="radio" name="newMode" value="copy" checked /> Copiar deste mês (avança as parcelas e tira as que acabaram)</label>
+        <label><input type="radio" name="newMode" value="empty" /> Começar vazio</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancelMonth">Cancelar</button>
+        <button class="btn-primary" id="confirmMonth">Criar mês</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
